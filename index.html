@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ATI-ai — your AI assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbfaf7;--surface:#fff;--ink:#14161a;--muted:#5d6470;--line:#e7e4dc;--accent:#5b4bff;--accent2:#00c2a8;--on:#fff;--glow:rgb(91 75 255/.16);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0f14;--surface:#161922;--ink:#f2f3f7;--muted:#9aa1b0;--line:#252a36;--glow:rgb(91 75 255/.28)}}
+:root[data-theme="dark"]{--bg:#0d0f14;--surface:#161922;--ink:#f2f3f7;--muted:#9aa1b0;--line:#252a36;--glow:rgb(91 75 255/.28)}
+html{scroll-behavior:smooth;scroll-padding-top:5rem}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif;line-height:1.08;margin:0;letter-spacing:-.02em}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:72rem;margin:0 auto;padding:0 1.5rem}
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:4rem}
+.logo{display:flex;align-items:center;gap:.6rem;font:700 1.25rem 'Space Grotesk'}
+.logo i{width:1.6rem;height:1.6rem;border-radius:.5rem;background:conic-gradient(from 200deg,var(--accent),var(--accent2),var(--accent));display:block}
+nav ul{display:flex;gap:2rem;list-style:none;margin:0;padding:0;font-size:.95rem;color:var(--muted)}
+nav ul a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.4rem;border-radius:99px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--surface);cursor:pointer;transition:transform .2s,box-shadow .2s;color:var(--ink);font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
+.btn.p{background:var(--accent);color:var(--on);border-color:transparent}
+.hero{position:relative;overflow:hidden;padding:5rem 0 4rem}
+.hero:before{content:"";position:absolute;width:42rem;height:42rem;right:-10rem;top:-12rem;background:radial-gradient(circle,var(--glow),transparent 65%);pointer-events:none}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center;position:relative}
+.tag{display:inline-block;padding:.35rem .9rem;border:1px solid var(--line);border-radius:99px;font-size:.82rem;color:var(--muted);background:var(--surface);margin-bottom:1.4rem}
+.hero h1{font-size:clamp(2.6rem,6vw,4.6rem)}
+.hero h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.2rem;color:var(--muted);max-width:32rem;margin:1.4rem 0 2rem}
+.row{display:flex;gap:.8rem;flex-wrap:wrap}
+.proof{margin-top:2rem;font-size:.88rem;color:var(--muted)}
+/* chat */
+.phone{background:var(--surface);border:1px solid var(--line);border-radius:2rem;box-shadow:0 30px 70px var(--glow);padding:1rem;max-width:25rem;margin-left:auto;width:100%}
+.ph-top{display:flex;align-items:center;gap:.6rem;padding:.4rem .4rem 1rem;border-bottom:1px solid var(--line);font-weight:600}
+.ph-top b{width:.55rem;height:.55rem;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 4px rgb(0 194 168/.2)}
+#log{height:19rem;overflow-y:auto;padding:1rem .2rem;display:flex;flex-direction:column;gap:.7rem;scroll-behavior:smooth}
+.m{max-width:85%;padding:.7rem 1rem;border-radius:1.1rem;font-size:.93rem;line-height:1.5;animation:none;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s;white-space:pre-line}
+.m.in{opacity:1;transform:none}
+.m.a{background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:.3rem;align-self:flex-start}
+.m.u{background:var(--accent);color:var(--on);border-bottom-right-radius:.3rem;align-self:flex-end}
+.dots span{display:inline-block;width:.4rem;height:.4rem;margin:0 .12rem;border-radius:50%;background:var(--muted);opacity:.4;transition:opacity .3s}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;padding:.4rem 0 .8rem}
+.chip{font:500 .8rem inherit;font-family:inherit;padding:.4rem .8rem;border:1px solid var(--line);border-radius:99px;background:var(--bg);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.send{display:flex;gap:.5rem}
+.send input{flex:1;min-width:0;padding:.8rem 1rem;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:.93rem}
+.send input:focus,.wl input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.send button{width:2.8rem;height:2.8rem;border-radius:50%;border:0;background:var(--accent);color:#fff;font-size:1.1rem;cursor:pointer}
+section{padding:5rem 0}
+.sh{max-width:36rem;margin-bottom:3rem}
+.sh h2{font-size:clamp(2rem,4vw,3rem)}
+.sh p{color:var(--muted);margin:1rem 0 0;font-size:1.1rem}
+.eb{font:600 .8rem 'Inter';letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:1.4rem;padding:1.8rem;transition:transform .25s,box-shadow .25s,border-color .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px var(--glow);border-color:var(--accent)}
+.card .ic{width:2.8rem;height:2.8rem;border-radius:.9rem;display:grid;place-items:center;background:var(--glow);font-size:1.3rem;margin-bottom:1.1rem}
+.card h3{font-size:1.25rem;margin-bottom:.5rem}
+.card p{margin:0;color:var(--muted);font-size:.96rem}
+.steps{counter-reset:s}
+.steps .card:before{counter-increment:s;content:"0" counter(s);font:700 2.4rem 'Space Grotesk';color:var(--accent);display:block;margin-bottom:.8rem}
+.price .card.hot{border-color:var(--accent);box-shadow:0 18px 50px var(--glow)}
+.price h3{font-size:1.1rem;color:var(--muted)}
+.price .n{font:700 2.8rem 'Space Grotesk';margin:.5rem 0 1rem}.price .n small{font-size:1rem;color:var(--muted);font-weight:500}
+.price ul{list-style:none;padding:0;margin:0 0 1.5rem;display:grid;gap:.6rem;color:var(--muted);font-size:.95rem}
+.price li:before{content:"✓ ";color:var(--accent2);font-weight:700}
+details{border-bottom:1px solid var(--line);padding:1.2rem 0}
+summary{cursor:pointer;font-weight:600;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between}
+summary:after{content:"+";color:var(--accent);font-size:1.4rem;line-height:1}
+details[open] summary:after{content:"–"}
+details p{color:var(--muted);margin:.8rem 0 0;max-width:42rem}
+.cta{background:linear-gradient(135deg,var(--accent),#3b2fd4);color:#fff;border-radius:2rem;padding:4rem 2rem;text-align:center}
+.cta h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:1rem}
+.cta p{opacity:.85;max-width:30rem;margin:0 auto 2rem}
+.wl{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.wl input{padding:.9rem 1.3rem;border-radius:99px;border:0;min-width:16rem;font:inherit;color:#14161a}
+.wl button{padding:.9rem 1.6rem;border-radius:99px;border:0;background:#14161a;color:#fff;font:600 .95rem inherit;font-family:inherit;cursor:pointer}
+#ok{margin-top:1rem;font-weight:600;min-height:1.5rem}
+footer{border-top:1px solid var(--line);padding:2.5rem 0;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+footer a:hover{color:var(--accent)}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,0,0,1),transform .7s cubic-bezier(.2,0,0,1)}
+.rv.in{opacity:1;transform:none}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.phone{margin:0 auto}.grid3{grid-template-columns:1fr}nav ul{display:none}.hero{padding-top:3rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.rv,.m{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="logo" href="#top"><i></i>ATI-ai</a><ul><li><a href="#features">Features</a></li><li><a href="#how">How it works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#faq">FAQ</a></li></ul><a class="btn p" href="#join">Join the waitlist</a></div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+ <div>
+  <span class="tag">✦ Coming soon to iPhone and Android</span>
+  <h1>Your AI assistant, <span>always one tap away.</span></h1>
+  <p class="lead">ATI-ai writes, plans, explains and remembers, so you can spend your time on the things that matter. Ask in plain words and get a clear answer in seconds.</p>
+  <div class="row"><a class="btn p" href="#join">Get early access</a><a class="btn" href="#features">See what it does</a></div>
+  <p class="proof">Free to start. No credit card needed.</p>
+ </div>
+ <div class="phone" aria-label="ATI-ai chat demo">
+  <div class="ph-top"><b></b>ATI-ai<span style="margin-left:auto;font-weight:400;color:var(--muted);font-size:.8rem">demo</span></div>
+  <div id="log" aria-live="polite"></div>
+  <div class="chips" id="chips"><button class="chip">Plan my week</button><button class="chip">Write a polite email</button><button class="chip">Explain AI simply</button><button class="chip">Healthy dinner idea</button></div>
+  <form class="send" id="f"><input id="q" placeholder="Ask ATI-ai anything…" aria-label="Message" autocomplete="off"><button aria-label="Send">↑</button></form>
+ </div>
+</div></header>
+
+<section id="features"><div class="wrap">
+ <div class="sh rv"><div class="eb">Features</div><h2>Everything you’d want from an assistant.</h2><p>One app for the small daily jobs and the big thinking.</p></div>
+ <div class="grid3">
+  <div class="card rv"><div class="ic">✍️</div><h3>Write anything</h3><p>Emails, messages, posts and reports in your own voice, drafted in seconds and easy to tweak.</p></div>
+  <div class="card rv"><div class="ic">🗓️</div><h3>Plan your day</h3><p>Turn a messy to-do list into a realistic schedule, then adjust it as your day changes.</p></div>
+  <div class="card rv"><div class="ic">💡</div><h3>Explain and learn</h3><p>Ask about any topic and get a clear explanation at the level you want, with examples.</p></div>
+  <div class="card rv"><div class="ic">🧠</div><h3>Remembers what matters</h3><p>Tell ATI-ai your preferences once. It keeps them in mind, and you decide what it stores.</p></div>
+  <div class="card rv"><div class="ic">🎙️</div><h3>Talk or type</h3><p>Speak when your hands are busy, type when you’re in a quiet place. Both work the same.</p></div>
+  <div class="card rv"><div class="ic">🔒</div><h3>Private by design</h3><p>Your chats belong to you. You can delete them whenever you like.</p></div>
+ </div>
+</div></section>
+
+<section id="how" style="background:var(--surface);border-block:1px solid var(--line)"><div class="wrap">
+ <div class="sh rv"><div class="eb">How it works</div><h2>Three steps to a better day.</h2></div>
+ <div class="grid3 steps">
+  <div class="card rv"><h3>Download ATI-ai</h3><p>Install the app and sign in with your email in under a minute.</p></div>
+  <div class="card rv"><h3>Ask in plain words</h3><p>Type or speak a request the way you would to a smart friend.</p></div>
+  <div class="card rv"><h3>Get it done</h3><p>Copy the answer, refine it with a follow-up, or save it for later.</p></div>
+ </div>
+</div></section>
+
+<section id="pricing" class="price"><div class="wrap">
+ <div class="sh rv"><div class="eb">Pricing</div><h2>Simple plans. Start free.</h2><p>Example prices for launch. Early waitlist members get a discount.</p></div>
+ <div class="grid3">
+  <div class="card rv"><h3>Free</h3><div class="n">$0</div><ul><li>20 questions a day</li><li>Chat history for 7 days</li><li>Text and voice</li></ul><a class="btn" href="#join">Join the waitlist</a></div>
+  <div class="card hot rv"><h3>Plus</h3><div class="n">$9<small> / month</small></div><ul><li>Unlimited questions</li><li>Long-term memory</li><li>Faster answers</li><li>Priority support</li></ul><a class="btn p" href="#join">Join the waitlist</a></div>
+  <div class="card rv"><h3>Team</h3><div class="n">$19<small> / user</small></div><ul><li>Everything in Plus</li><li>Shared prompts</li><li>Admin controls</li></ul><a class="btn" href="#join">Join the waitlist</a></div>
+ </div>
+</div></section>
+
+<section id="faq"><div class="wrap" style="max-width:48rem">
+ <div class="sh rv"><div class="eb">FAQ</div><h2>Questions, answered.</h2></div>
+ <details class="rv"><summary>When does the app launch?</summary><p>We’re building it now. Join the waitlist and you’ll be the first to hear when it’s ready.</p></details>
+ <details class="rv"><summary>Is ATI-ai free?</summary><p>Yes, there’s a free plan with a daily limit. Paid plans add unlimited use and memory.</p></details>
+ <details class="rv"><summary>Is my data private?</summary><p>Your conversations are yours. You can delete your history at any time, and you choose what ATI-ai remembers.</p></details>
+ <details class="rv"><summary>Which devices will it run on?</summary><p>iPhone and Android first, with a web version after that.</p></details>
+</div></section>
+
+<section id="join" style="padding-top:1rem"><div class="wrap"><div class="cta rv">
+ <h2>Be first in line.</h2><p>Leave your email and we’ll tell you the moment ATI-ai is ready.</p>
+ <form class="wl" id="wl"><input type="email" id="em" required placeholder="you@example.com" aria-label="Email address"><button>Join the waitlist</button></form>
+ <div id="ok" role="status"></div>
+</div></div></section>
+
+<footer><div class="wrap"><span>© 2026 ATI-ai. All rights reserved.</span><span>Call us: <a href="tel:0140985947">0140985947</a></span><span><a href="#top">Back to top ↑</a></span></div></footer>
+
+<script>
+const log=document.getElementById("log"),q=document.getElementById("q"),chips=document.getElementById("chips");
+const add=(t,c)=>{const d=document.createElement("div");d.className="m "+c;d.textContent=t;log.appendChild(d);requestAnimationFrame(()=>d.classList.add("in"));log.scrollTop=log.scrollHeight;return d};
+const KB=[
+ [/week|plan|schedule|day/,"Here’s a simple plan:\n\n• Mon–Tue: your top priority, in the morning\n• Wed: meetings and catch-up\n• Thu: finish and review\n• Fri: light tasks, then plan next week\n\nWant me to fit in your real tasks?"],
+ [/email|write|message|polite/,"Here’s a draft:\n\n“Hi Sam, thanks for your message. I’d be glad to help. Could we talk on Thursday afternoon? Let me know what works for you.\n\nBest wishes”\n\nWant it shorter or more formal?"],
+ [/explain|ai|artificial|learn/,"AI is software that learns patterns from lots of examples, so it can do things like answer questions or write text. Think of it as a very well-read helper that you guide with clear instructions."],
+ [/dinner|food|cook|eat|recipe|healthy/,"Try sheet-pan chicken with roasted vegetables:\n\n1. Toss chicken and veg with oil and spices\n2. Roast at 200°C for 25 minutes\n3. Serve with rice or a salad\n\nIt takes 10 minutes of effort."],
+ [/hello|hi|hey/,"Hi! I’m ATI-ai. I can help you write, plan and learn. What would you like to do?"],
+ [/price|cost|free/,"ATI-ai will have a free plan, plus paid plans from $9 a month. Join the waitlist for a launch discount."]
+];
+const reply=t=>{const hit=KB.find(([r])=>r.test(t.toLowerCase()));return hit?hit[1]:"Good question. This is a demo, so my answers are limited, but the real ATI-ai will handle that. Join the waitlist below to try it first."};
+function ask(t){t=t.trim();if(!t)return;add(t,"u");const w=add("…","a");setTimeout(()=>{w.textContent=reply(t);log.scrollTop=log.scrollHeight},700+Math.random()*500)}
+document.getElementById("f").onsubmit=e=>{e.preventDefault();ask(q.value);q.value=""};
+chips.onclick=e=>{if(e.target.classList.contains("chip"))ask(e.target.textContent)};
+add("Hi, I’m ATI-ai. Try one of the prompts below, or ask me anything.","a");
+/* reveal on scroll */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll(".rv").forEach((el,i)=>{el.style.transitionDelay=(i%3)*90+"ms";io.observe(el)});
+/* waitlist (stored only in this browser) */
+document.getElementById("wl").onsubmit=e=>{e.preventDefault();const em=document.getElementById("em").value;
+ try{const l=JSON.parse(localStorage.getItem("wl")||"[]");l.push(em);localStorage.setItem("wl",JSON.stringify(l))}catch(_){}
+ document.getElementById("ok").textContent="Thanks! You’re on the list.";e.target.reset()};
+</script>
+</body>
+</html>
